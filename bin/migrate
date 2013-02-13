@@ -231,9 +231,16 @@ function performMigration(direction, migrationName) {
   set[direction](null, migrationPath);
 }
 
-// invoke command
+function invoke() {
+  var command = options.command || 'up';
+  if (!(command in commands)) abort('unknown command "' + command + '"');
+  command = commands[command];
+  command.apply(this, options.args);
+}
 
-var command = options.command || 'up';
-if (!(command in commands)) abort('unknown command "' + command + '"');
-command = commands[command];
-command.apply(this, options.args);
+// invoke command
+if (require.main == module) {
+  invoke();
+}
+
+exports.invoke = invoke;
