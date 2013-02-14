@@ -237,7 +237,7 @@ function performMigration(direction, migrationName) {
 }
 
 function invoke(in_command, fn) {
-  var command = options.command || 'up';
+  var command = in_command || options.command || 'up';
   if (!(command in commands)) abort('unknown command "' + command + '"');
   command = commands[command];
   if (fn) options.fn = fn;
