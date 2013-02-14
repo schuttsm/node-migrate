@@ -220,8 +220,13 @@ function performMigration(direction, migrationName) {
   });
 
   set.on('save', function(){
-    log('migration', 'complete');
-    process.exit();
+    if (options.fn) {
+      options.fn();
+    }
+    else {
+      log('migration', 'complete');
+      process.exit();      
+    }
   });
 
   var migrationPath = migrationName
@@ -231,10 +236,11 @@ function performMigration(direction, migrationName) {
   set[direction](null, migrationPath);
 }
 
-function invoke() {
+function invoke(in_command, fn) {
   var command = options.command || 'up';
   if (!(command in commands)) abort('unknown command "' + command + '"');
   command = commands[command];
+  if (fn) options.fn = fn;
   command.apply(this, options.args);
 }
 
