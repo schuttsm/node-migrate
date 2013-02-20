@@ -94,7 +94,9 @@ while (args.length) {
       break;
     default:
       if (options.command) {
-        options.args.push(arg);
+        if (require.main == module) {
+          options.args.push(arg);
+        }
       } else {
         options.command = arg;
       }
@@ -239,7 +241,7 @@ function performMigration(direction, migrationName) {
 }
 
 function invoke(in_command, fn) {
-  var command = in_command || options.command || 'up';
+  var command = in_command || 'up';
   if (!(command in commands)) abort('unknown command "' + command + '"');
   command = commands[command];
   if (fn) options.fn = fn;
@@ -248,7 +250,7 @@ function invoke(in_command, fn) {
 
 // invoke command
 if (require.main == module) {
-  invoke();
+  invoke(options.command);
 }
 
 exports.invoke = invoke;
